@@ -20,15 +20,14 @@ body{font-family:'Nunito',system-ui,sans-serif;-webkit-user-select:none;user-sel
 .cloud svg{display:block;width:100%;height:100%}
 @keyframes drift{from{transform:translateX(-110%)}to{transform:translateX(calc(100vw + 10%))}}
 
-#stage{z-index:2;display:flex;flex-direction:column;touch-action:none;transition:opacity .5s ease,transform .5s ease}
-#stage.out{opacity:0;transform:scale(.9);pointer-events:none}
+#stage{z-index:2;display:flex;flex-direction:column;touch-action:none;transition:opacity .6s ease}
+#stage.out{opacity:0;pointer-events:none}
 #pots{position:relative;flex:1;min-height:0;margin:calc(env(safe-area-inset-top,0px) + 2vh) 2vw 0;opacity:0;transform:translateY(24px) scale(.96);transition:opacity .6s ease,transform .7s cubic-bezier(.3,1.4,.5,1)}
 #pots.ready{opacity:1;transform:none}
-.slot{position:absolute;display:flex;align-items:flex-end;justify-content:center}
+.slot{position:absolute;display:flex;align-items:flex-end;justify-content:center;transform:rotate(var(--rot,0deg));transform-origin:50% 90%}
 .slot::after{content:'';position:absolute;left:24%;right:24%;bottom:-4px;height:11px;border-radius:50%;background:rgba(28,58,140,.25);filter:blur(3px);animation:shade var(--t,3s) ease-in-out infinite;animation-delay:var(--d,0s)}
-.pot,.pot-in{width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;transform-origin:50% 100%}
-.pot{position:relative;z-index:1;cursor:pointer}
-.pot-in.hop{animation:hop .5s cubic-bezier(.25,.9,.35,1)}
+.slot.poof{animation:poof .5s cubic-bezier(.3,.6,.4,1) forwards;pointer-events:none}
+.pot{position:relative;z-index:1;width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;transform-origin:50% 100%;cursor:pointer}
 .pz{display:block;overflow:visible;pointer-events:none}
 .pz .eye{transform-box:fill-box;transform-origin:center;transition:transform .07s ease}
 .pz.bl .eye{transform:scaleY(.1)}
@@ -37,17 +36,22 @@ body{font-family:'Nunito',system-ui,sans-serif;-webkit-user-select:none;user-sel
 @keyframes sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
 @keyframes bounce{0%,100%{transform:translateY(0) scale(1.04,.96)}30%{transform:translateY(0) scale(.97,1.03)}55%{transform:translateY(-10%) scale(.98,1.02)}80%{transform:translateY(0) scale(1.03,.97)}}
 @keyframes shade{0%,100%{transform:scaleX(1);opacity:1}50%{transform:scaleX(.8);opacity:.6}}
-@keyframes hop{
-  0%{transform:translateY(0) rotate(0deg) scale(1,1)}
-  14%{transform:translateY(0) rotate(0deg) scale(1.14,.84)}
-  42%{transform:translateY(-16%) rotate(var(--tilt,6deg)) scale(.93,1.09)}
-  68%{transform:translateY(0) rotate(0deg) scale(1.06,.95)}
-  84%{transform:translateY(0) rotate(0deg) scale(.98,1.02)}
-  100%{transform:translateY(0) rotate(0deg) scale(1,1)}}
+@keyframes poof{
+  0%{transform:translateY(0) rotate(var(--rot,0deg)) scale(1,1);opacity:1}
+  22%{transform:translateY(0) rotate(var(--rot,0deg)) scale(1.18,.8);opacity:1}
+  48%{transform:translateY(-14%) rotate(var(--rot,0deg)) scale(.9,1.15);opacity:1}
+  100%{transform:translateY(-36%) rotate(calc(var(--rot,0deg) + 24deg)) scale(.15,.15);opacity:0}}
+.puff{position:fixed;z-index:4;width:0;height:0;pointer-events:none}
+.puff i{position:absolute;left:-10px;top:-10px;width:20px;height:20px;border-radius:50%;background:#fff;border:2.5px solid #4a2a14;animation:puff .6s ease-out both}
+@keyframes puff{0%{transform:rotate(var(--a)) translateX(6px) scale(.3);opacity:1}70%{opacity:1}100%{transform:rotate(var(--a)) translateX(40px) scale(1.15);opacity:0}}
 
-#cta{flex:none;width:100%;padding:10px 16px 30px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 30px);font-weight:900;font-size:clamp(28px,8.4vw,46px);line-height:1.1;color:#fff;text-align:center;text-shadow:0 4px 0 #3a6fe0,0 10px 24px rgba(28,58,140,.35);pointer-events:none}
-#cta span{display:inline-block;animation:breathe 2.4s ease-in-out infinite}
+#cta{flex:none;width:100%;padding:6px 16px 24px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px);text-align:center;pointer-events:none;transition:opacity .4s ease,transform .4s ease}
+#cta.gone{opacity:0;transform:translateY(24px)}
+#cta .t{display:inline-block;font-weight:900;font-size:clamp(28px,8.4vw,46px);line-height:1.1;color:#fff;text-shadow:0 4px 0 #3a6fe0,0 10px 24px rgba(28,58,140,.35);animation:breathe 2.4s ease-in-out infinite}
+#cta .n{display:inline-block;margin-top:10px;padding:3px 18px 4px;border-radius:999px;background:#fff;color:#3a6fe0;font-weight:900;font-size:clamp(20px,5.6vw,28px);line-height:1.2;box-shadow:0 4px 0 #3a6fe0}
+#cta .n.bump{animation:bump .35s cubic-bezier(.3,1.8,.5,1)}
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.28)}100%{transform:scale(1)}}
 
 #memes{z-index:5;pointer-events:none;overflow:hidden}
 .meme{position:absolute;transform:translate(-50%,-50%) rotate(var(--r));animation:memeIn .45s cubic-bezier(.3,1.6,.5,1) both}
@@ -56,27 +60,43 @@ body{font-family:'Nunito',system-ui,sans-serif;-webkit-user-select:none;user-sel
 @keyframes memeIn{from{opacity:0;transform:translate(-50%,-50%) rotate(calc(var(--r) - 30deg)) scale(.2)}to{opacity:1;transform:translate(-50%,-50%) rotate(var(--r)) scale(1)}}
 @keyframes memeOut{from{opacity:1;transform:translate(-50%,-50%) rotate(var(--r)) scale(1)}to{opacity:0;transform:translate(-50%,-80%) rotate(calc(var(--r) + 12deg)) scale(.7)}}
 
-#env{--ew:min(78vw,340px);position:fixed;left:50%;top:47%;z-index:6;width:var(--ew);height:calc(var(--ew) * .66);transform:translate(-50%,-50%) scale(0) rotate(-14deg);transition:transform .75s cubic-bezier(.3,1.5,.5,1),opacity .5s ease}
-#env.in{transform:translate(-50%,-50%) scale(1) rotate(-3deg)}
-#env.gone{opacity:0;transform:translate(-50%,-25%) scale(.85) rotate(-3deg)}
+#env{--ew:min(74vw,320px);position:fixed;left:50%;top:44%;z-index:6;width:var(--ew);height:calc(var(--ew) * .66);margin:calc(var(--ew) * -.33) 0 0 calc(var(--ew) * -.5);opacity:0;pointer-events:none}
+#env.fall{opacity:1;pointer-events:auto;cursor:pointer;animation:envFall 1.15s cubic-bezier(.3,.7,.4,1) both}
+#env.away{animation:envAway .55s ease-in forwards;pointer-events:none}
+@keyframes envFall{0%{transform:translateY(-110vh) rotate(-24deg)}45%{transform:translateY(3vh) rotate(9deg)}62%{transform:translateY(-1.5vh) rotate(-6deg)}78%{transform:translateY(.8vh) rotate(3deg)}90%{transform:translateY(0) rotate(-1.5deg)}100%{transform:translateY(0) rotate(0deg)}}
+@keyframes envAway{from{transform:translateY(0) rotate(0deg);opacity:1}to{transform:translateY(55vh) rotate(10deg);opacity:0}}
 #env>div{position:absolute}
 .e-back{top:0;left:0;right:0;bottom:0;z-index:0;background:#d7e4ff;border-radius:14px;box-shadow:0 22px 46px rgba(20,40,110,.35)}
-.e-paper{left:7%;right:7%;top:5%;height:88%;z-index:2;background:#fffdf7;border-radius:10px;transition:transform .8s cubic-bezier(.3,1.25,.5,1)}
-.e-paper::before{content:'';position:absolute;left:14%;right:14%;top:14%;height:42%;background:repeating-linear-gradient(180deg,#dfe6f6 0 3px,transparent 3px 12px)}
-#env.peek .e-paper{transform:translateY(-55%)}
+.e-paper{left:7%;right:7%;top:5%;height:88%;z-index:2;background:#fffdf7;border-radius:10px}
 .e-front{top:0;left:0;right:0;bottom:0;z-index:3;border-radius:0 0 14px 14px;overflow:hidden}
-.e-flap{left:0;top:0;width:100%;height:58%;z-index:4;transform-origin:50% 0;transform:perspective(900px) rotateX(0deg);transition:transform .6s ease-in-out}
+.e-flap{left:0;top:0;width:100%;height:58%;z-index:4;transform-origin:50% 0;transform:perspective(900px) rotateX(0deg);transition:transform .5s ease-in-out}
 #env.open .e-flap{transform:perspective(900px) rotateX(180deg)}
-#env.peek .e-flap{z-index:1}
 .e-front svg,.e-flap svg{display:block;width:100%;height:100%}
 .e-seal{left:50%;top:58%;z-index:5;width:calc(var(--ew) * .16);height:calc(var(--ew) * .16);transform:translate(-50%,-50%);border-radius:50%;background:#ff6b7a;box-shadow:0 3px 0 #d84a5c,0 8px 14px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;transition:transform .3s ease,opacity .3s ease}
 .e-seal svg{width:50%;height:50%}
-#env.open .e-seal{transform:translate(-50%,-50%) scale(0);opacity:0}
+#env.open .e-seal{transform:translate(-50%,-50%) scale(1.7);opacity:0}
+
+#fold{--fw:min(84vw,480px);--fh:min(21vh,170px);position:fixed;left:50%;top:44%;z-index:5;width:var(--fw);height:var(--fh);margin:calc(var(--fh) * -.5) 0 0 calc(var(--fw) * -.5);-webkit-perspective:1400px;perspective:1400px;-webkit-transform-style:preserve-3d;transform-style:preserve-3d;transform:translateY(8vh) scale(.6);opacity:0;transition:transform .75s cubic-bezier(.3,1.2,.5,1),opacity .35s ease}
+#fold.up{opacity:1;transform:translateY(-6vh) scale(1)}
+#fold.fade{opacity:0;transition:opacity .5s ease}
+.fp{position:absolute;left:0;width:100%;height:100%;-webkit-transform-style:preserve-3d;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.45,.05,.3,1)}
+.fp-m{top:0}
+.fp-t{bottom:100%;transform-origin:50% 100%;transform:translateZ(2px) rotateX(-180deg)}
+.fp-b{top:100%;transform-origin:50% 0;transform:translateZ(1px) rotateX(180deg)}
+#fold.u1 .fp-t{transform:translateZ(0) rotateX(0deg)}
+#fold.u2 .fp-b{transform:translateZ(0) rotateX(0deg)}
+.ff,.fb{position:absolute;top:0;left:0;right:0;bottom:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;background:#fffdf7}
+.ff{background-image:repeating-linear-gradient(180deg,transparent 0 25px,rgba(120,150,210,.28) 25px 26px);background-position:0 12px}
+.fb{transform:rotateX(180deg);background:#f7f1e3;display:flex;align-items:center;justify-content:center}
+.fb svg{width:34px;height:34px}
+.fp-m .ff{border-radius:3px;box-shadow:0 16px 36px rgba(20,40,110,.32)}
+.fp-t .ff,.fp-t .fb{border-radius:12px 12px 0 0}
+.fp-b .ff,.fp-b .fb{border-radius:0 0 12px 12px}
 
 #letter{z-index:8;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6vh 4vw 0;padding-top:calc(env(safe-area-inset-top,0px) + 6vh);background:rgba(24,48,120,.3);opacity:0;transition:opacity .6s ease}
 #letter::after{content:'';display:block;height:calc(env(safe-area-inset-bottom,0px) + 8vh)}
 #letter.on{opacity:1}
-.paper{max-width:580px;margin:0 auto;background:#fffdf7;border-radius:22px;padding:30px 22px 36px;box-shadow:0 26px 60px rgba(20,40,110,.4);color:#26314f;font-family:'Neucha','Nunito',cursive;font-size:clamp(19px,5.2vw,23px);line-height:1.5;transform:translateY(60px) scale(.94);transition:transform .8s cubic-bezier(.3,1.3,.5,1);-webkit-user-select:text;user-select:text}
+.paper{max-width:580px;margin:0 auto;background:#fffdf7;border-radius:22px;padding:30px 22px 36px;box-shadow:0 26px 60px rgba(20,40,110,.4);color:#26314f;font-family:'Neucha','Nunito',cursive;font-size:clamp(19px,5.2vw,23px);line-height:1.5;transform:scale(.97);transition:transform .6s ease;-webkit-user-select:text;user-select:text}
 #letter.on .paper{transform:none}
 .paper p{margin-bottom:.9em;opacity:0;transform:translateY(12px);animation:pin .7s ease forwards}
 .paper p:last-child{margin-bottom:0}
@@ -88,12 +108,15 @@ body{font-family:'Nunito',system-ui,sans-serif;-webkit-user-select:none;user-sel
 
 <main id="stage" class="full">
   <div id="pots"></div>
-  <div id="cta"><span>потапай картошку</span></div>
+  <div id="cta">
+    <div><span class="t">потапай картошку</span></div>
+    <div><span class="n" id="cntBox"><b id="cnt">0</b> / <span id="need">6</span></span></div>
+  </div>
 </main>
 
 <div id="memes" class="full"></div>
 
-<div id="env" hidden>
+<div id="env">
   <div class="e-back"></div>
   <div class="e-paper"></div>
   <div class="e-front"><svg viewBox="0 0 100 66" preserveAspectRatio="none"><path d="M0 4L50 38L100 4V66H0Z" fill="#fff"/><path d="M0 66L50 38L100 66" fill="none" stroke="#d3e0fb" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg></div>
@@ -101,12 +124,18 @@ body{font-family:'Nunito',system-ui,sans-serif;-webkit-user-select:none;user-sel
   <div class="e-seal"><svg viewBox="0 0 24 24"><path d="M12 21C5 16 2 12.5 2 8.5C2 5.5 4.3 3.5 7 3.5C9 3.5 10.8 4.7 12 6.5C13.2 4.7 15 3.5 17 3.5C19.7 3.5 22 5.5 22 8.5C22 12.5 19 16 12 21Z" fill="#fff"/></svg></div>
 </div>
 
+<div id="fold" hidden>
+  <div class="fp fp-m"><div class="ff"></div></div>
+  <div class="fp fp-b"><div class="ff"></div><div class="fb"></div></div>
+  <div class="fp fp-t"><div class="ff"></div><div class="fb"><svg viewBox="0 0 24 24"><path d="M12 21C5 16 2 12.5 2 8.5C2 5.5 4.3 3.5 7 3.5C9 3.5 10.8 4.7 12 6.5C13.2 4.7 15 3.5 17 3.5C19.7 3.5 22 5.5 22 8.5C22 12.5 19 16 12 21Z" fill="#ff6b7a"/></svg></div></div>
+</div>
+
 <div id="letter" class="full" hidden><div class="paper" id="paper"></div></div>
 
 <script>
 /* ===== НАСТРОЙКИ ===== */
 const CONFIG = {
-  taps: 15, // сколько тапов до письма
+  taps: 6, // сколько картошек натапать до письма
   // мемы = все картинки на главной странице репозитория; запасные имена, если список не загрузится:
   memes: Array.from({ length: 15 }, (_, i) => 'meme' + (i + 1) + '.jpg'),
 };
@@ -114,10 +143,10 @@ const CONFIG = {
 const LETTER = `потато! я поздравляю вас с вашим днем рождения!! 
 я не знаю какими материальными подарками вас можно удивить, но я бы просто хотела в этот день вас немножко порадовать и сказать какой вы крутой. а вы ряльна супер крутой, потата, эта чистая правда! никогда не сомневайтесь в своей крутости, не сомневайтесь в своих способностях и возможностях, продолжайте следовать своей цели и не тильтуйте!!!!!!!! 
 я хочу вам искренне пожелать, чтобы вы были счастливы. пусть вас окружают люди, которые будут всегда за вас и с вами, которые будут по-настоящему вас ценить и приносить вам столько же добра и радости, сколько вы даете окружающим
-хочу вам также пожелать здоровья, потато. вы зря не слушаити моих коллов конечно, но здоровье это самое ценное что у нас есть, что нельзя будет купить ни за какие деньги в будущем. никакие усилия и работа не стоят вашего здоровья и эта факт. берегите себя и своих близких! 
+хочу вам также пожелать здоровья, потато. вы зря не слушаити моих коллов конечно, но здоровье это самое ценное что у нас есть, что нельзя будет купить ни за какие деньги в будущем. никакие усилия и работа не стоят вашего здоровья и эта факт. берегите себя и своих близких! будьте здоровы, потато
 ну и ,конечно, хочу вам пожелать удачи. я считаю, что  20% любого успеха это удача. с усердной работой и трудом она обязательно придёт. так вот пусть она сопутствует вам на всем жизненном пути, не только в работе. желаю вам оказаться в нужном месте и в нужное время, потато! пусть все ваши цели осуществятся, желания исполнятся, мечты сбудяца и вы наконец поедете отдыхать, путешествовать, ловить солнышко, любоваться горами и наслаждаться жизнью! 
-а вообще потата мой колл вам: не ждите момента чтобы быть счастливым. живити сейчас, кайфуйте от вашей жизни и берите из нее максимум. стакан наполовину полон, понимаити??жизнь слишком коротка чтобы тильтовать. я верю что все у вас получится, потата. все сложится так, как надо, поверьте. доверьтесь процессу 
-карочи с вашим личным новым годом вас!!! растите большой картофелиной, не будьте пюрешкой🥔🥔🥔🥔🥔🥔🍓🍓🍓🍓🍓`;
+а вообще потата мой колл вам: не ждите момента чтобы быть счастливым. живити сейчас, кайфуйте от вашей жизни и берите из нее максимум. стакан наполовину полон, понимаити??жизнь слишком коротка чтобы тильтовать. а количество счастья в ней зависит от того, сколько вы сами сможете разглядеть. я верю что все у вас получится, потата. все сложится так, как надо, поверьте. доверьтесь процессу 
+карочи с вашим личным новым годом вас!!! растите крутой картофелиной, не будьте пюрешкой🥔🥔🥔🥔🥔🥔🍓🍓🍓🍓🍓`;
 /* ===================== */
 
 const $ = s => document.querySelector(s);
@@ -126,6 +155,7 @@ const f1 = v => v.toFixed(1);
 const later = (ms, v) => new Promise(r => setTimeout(() => r(v), ms));
 const IMG_RE = /\.(png|jpe?g|gif|webp|avif|heic|heif)$/i;
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+const pick = a => a[Math.random() * a.length | 0];
 
 /* облака */
 const CLOUD = '<svg viewBox="0 -8 120 58" preserveAspectRatio="none"><path d="M25 48a17 17 0 0 1 0-34a22 22 0 0 1 40-8a18 18 0 0 1 30 10a16 16 0 0 1 0 32Z" fill="#fff"/></svg>';
@@ -146,9 +176,12 @@ const PALS = [
   { fill: '#eba98b', hatch: '#c07457', spot: '#a35a40' },
   { fill: '#dba763', hatch: '#a86f30', spot: '#7f5225' },
 ];
-const ACCS = ['sprout', 'phones', 'candle', 'shades', 'scarf', 'bowtie', 'plaster', 'specs', 'none'];
-const MOUTHS = ['grin', 'teeth', 'smile', 'cat', 'o', 'blep'];
-const CUPS = ['#ff8fb1', '#7fe0c3', '#ffd35c', '#ff7a6b', '#a7b8ff'];
+const HEADS = ['tophat', 'cap', 'beanie', 'bucket', 'candle', 'phones'];
+const EYEWEAR = ['shades', 'pixel', 'specs', 'stars'];
+const NECKS = ['chain', 'bowtie'];
+const HANDS = ['money', 'cash'];
+const MOUTHS = ['grin', 'teeth', 'smile', 'cat', 'blep', 'smirk'];
+const BRIGHT = ['#ff5c7a', '#7fe0c3', '#ffd35c', '#a78bfa', '#5cc8ff', '#ff9f43'];
 
 function smooth(P) {
   const n = P.length;
@@ -174,42 +207,50 @@ function wobCircle(x, y, r, sy) {
   for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2, k = r * (1 + (Math.random() - .5) * .1); P.push([x + Math.cos(a) * k, y + Math.sin(a) * k * (sy || 1)]); }
   return smooth(P);
 }
+function starPath(x, y, R) {
+  let d = '';
+  for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? R * .48 : R; d += (i ? 'L' : 'M') + f1(x + Math.cos(a) * r) + ' ' + f1(y + Math.sin(a) * r); }
+  return d + 'Z';
+}
 
 let UID = 0;
 function potatoSVG(o) {
   const id = 'pz' + (UID++), pal = o.pal;
-  const b = { cx: 70, cy: 110, rx: o.rx, ry: o.ry, a1: rnd(.02, .05), a2: rnd(.015, .035), p1: rnd(0, 6.3), p2: rnd(0, 6.3), j: Array.from({ length: 16 }, () => (Math.random() - .5) * .035) };
+  const b = { cx: 70, cy: 112, rx: o.rx, ry: o.ry, a1: rnd(.02, .05), a2: rnd(.015, .035), p1: rnd(0, 6.3), p2: rnd(0, 6.3) };
   const p3 = rnd(0, 6.3), p4 = rnd(0, 6.3);
-  const th = a => 3.3 + 1.4 * Math.sin(2 * a + p3) + .6 * Math.sin(5 * a + p4);
-  const base = bodyPts(b, 0);
-  const top = Math.min.apply(null, base.map(p => p[1]));
-  const minX = Math.min.apply(null, base.map(p => p[0])), maxX = Math.max.apply(null, base.map(p => p[0]));
+  const frames = [0, 1, 2].map(() => {
+    const bb = Object.assign({}, b, { j: Array.from({ length: 16 }, () => (Math.random() - .5) * .035) });
+    const q3 = p3 + rnd(-.5, .5), q4 = p4 + rnd(-.5, .5);
+    const th = a => 3.3 + 1.4 * Math.sin(2 * a + q3) + .6 * Math.sin(5 * a + q4);
+    return { pts: bodyPts(bb, 0), fill: smooth(bodyPts(bb, -.5)), ring: smooth(bodyPts(bb, a => th(a) / 2)) + smooth(bodyPts(bb, a => -th(a) / 2)), sketch: smooth(bodyPts(bb, .6)) };
+  });
+  const F = frames[0];
+  const top = Math.min.apply(null, F.pts.map(p => p[1]));
+  const minX = Math.min.apply(null, F.pts.map(p => p[0])), maxX = Math.max.apply(null, F.pts.map(p => p[0]));
   const cx = b.cx, cy = b.cy, rx = b.rx, ry = b.ry;
-  const fillD = smooth(bodyPts(b, -.5));
-  const ringD = smooth(bodyPts(b, a => th(a) / 2)) + smooth(bodyPts(b, a => -th(a) / 2));
   const er = Math.max(8, Math.min(10.5, rx * .22)), ey = cy - ry * .16, ex1 = cx - rx * .36, ex2 = cx + rx * .36;
   const mx = cx, my = ey + er * 2, s = rx * .2;
   const S = `fill="none" stroke="${INK}" stroke-linecap="round" stroke-linejoin="round"`;
-  let back = '', body = '', front = '', eyes = '', over = '';
+  const hidesEyes = o.eyew === 'shades' || o.eyew === 'pixel' || o.eyew === 'stars';
+  let back = '', body = '', front = '', hat = '', eyes = '', over = '';
 
-  /* сзади: ножки, ручки, то что за головой */
+  /* сзади: ножки, ручки, свечка, дужка наушников */
   const fy = cy + ry * .97, fl = cx - rx * .38, fr = cx + rx * .38, ny = cy + ry * .12;
   back += `<ellipse cx="${f1(fl)}" cy="${f1(fy)}" rx="11" ry="6.2" fill="#7b4a26" stroke="${INK}" stroke-width="2.2" transform="rotate(-6 ${f1(fl)} ${f1(fy)})"/>`;
   back += `<ellipse cx="${f1(fr)}" cy="${f1(fy)}" rx="11" ry="6.2" fill="#7b4a26" stroke="${INK}" stroke-width="2.2" transform="rotate(6 ${f1(fr)} ${f1(fy)})"/>`;
   back += `<ellipse cx="${f1(minX + 2)}" cy="${f1(ny)}" rx="7.5" ry="10.5" fill="${pal.fill}" stroke="${INK}" stroke-width="2.6" transform="rotate(28 ${f1(minX + 2)} ${f1(ny)})"/>`;
   back += `<ellipse cx="${f1(maxX - 2)}" cy="${f1(ny)}" rx="7.5" ry="10.5" fill="${pal.fill}" stroke="${INK}" stroke-width="2.6" transform="rotate(-28 ${f1(maxX - 2)} ${f1(ny)})"/>`;
-  if (o.acc === 'candle') back += `<g transform="translate(${f1(cx)} ${f1(top)})"><rect x="-4.5" y="-20" width="9" height="28" rx="2.5" fill="#fff" stroke="${INK}" stroke-width="2.2"/><path d="M-4.5 -12L4.5 -18M-4.5 -2L4.5 -8" stroke="#ff7aa2" stroke-width="2.2"/><path d="M0 -20V-24" stroke="${INK}" stroke-width="1.8" stroke-linecap="round"/><path d="M0 -38C6 -30 5.5 -25 0 -23.5C-5.5 -25 -6 -30 0 -38Z" fill="#ffb02e" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/><path d="M0 -33C2.6 -29 2.4 -26.5 0 -26C-2.4 -26.5 -2.6 -29 0 -33Z" fill="#fff3a6"/></g>`;
-  if (o.acc === 'sprout') back += `<g transform="translate(${f1(cx + 2)} ${f1(top)})" stroke="#3e8b3a" stroke-width="2.2" stroke-linejoin="round"><path d="M0 8C-1 -4 2 -12 8 -18" fill="none" stroke-width="3.2" stroke-linecap="round"/><path d="M8 -18C13 -29 27 -29 30 -23C23 -14 14 -13 8 -18Z" fill="#8fd36f"/><path d="M2 -8C-5 -18 -17 -17 -19 -11C-12 -4 -4 -4 2 -8Z" fill="#8fd36f"/></g>`;
+  if (o.head === 'candle') back += `<g transform="translate(${f1(cx)} ${f1(top)})"><rect x="-4.5" y="-20" width="9" height="28" rx="2.5" fill="#fff" stroke="${INK}" stroke-width="2.2"/><path d="M-4.5 -12L4.5 -18M-4.5 -2L4.5 -8" stroke="#ff7aa2" stroke-width="2.2"/><path d="M0 -20V-24" stroke="${INK}" stroke-width="1.8" stroke-linecap="round"/><path d="M0 -38C6 -30 5.5 -25 0 -23.5C-5.5 -25 -6 -30 0 -38Z" fill="#ffb02e" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/><path d="M0 -33C2.6 -29 2.4 -26.5 0 -26C-2.4 -26.5 -2.6 -29 0 -33Z" fill="#fff3a6"/></g>`;
   const cupY = cy - ry * .3;
-  if (o.acc === 'phones') {
+  if (o.head === 'phones') {
     back += `<path d="M${f1(minX + 4)} ${f1(cupY)}C${f1(minX - 2)} ${f1(top - 26)} ${f1(maxX + 2)} ${f1(top - 26)} ${f1(maxX - 4)} ${f1(cupY)}" fill="none" stroke="#3b3f4a" stroke-width="5" stroke-linecap="round"/>`;
     front += `<rect x="${f1(minX - 5)}" y="${f1(cupY - 7)}" width="12" height="22" rx="6" fill="${o.cup}" stroke="${INK}" stroke-width="2.4"/><rect x="${f1(maxX - 7)}" y="${f1(cupY - 7)}" width="12" height="22" rx="6" fill="${o.cup}" stroke="${INK}" stroke-width="2.4"/>`;
   }
 
   /* тело: заливка чуть мимо контура, штриховка, пятнышки, блик, контур «кистью» */
   const mis = `translate(${f1(rnd(-1.8, -1))} ${f1(rnd(.8, 1.6))})`;
-  body += `<path d="${fillD}" fill="${pal.fill}" transform="${mis}"/>`;
-  body += `<clipPath id="${id}"><path d="${fillD}" transform="${mis}"/></clipPath><g clip-path="url(#${id})" stroke="${pal.hatch}" stroke-width="2.2" stroke-linecap="round" opacity=".55">`;
+  body += `<path class="bf" d="${F.fill}" fill="${pal.fill}" transform="${mis}"/>`;
+  body += `<clipPath id="${id}"><path class="bc" d="${F.fill}" transform="${mis}"/></clipPath><g clip-path="url(#${id})" stroke="${pal.hatch}" stroke-width="2.2" stroke-linecap="round" opacity=".42">`;
   for (let k = 0; k < 7; k++) { const x1 = cx + rx * (.02 + k * .17); body += `<path d="M${f1(x1)} ${f1(cy + ry * 1.08)}L${f1(x1 + ry * .5)} ${f1(cy + ry * .3)}"/>`; }
   body += '</g>';
   shuffle([[-.55, -.6], [.58, -.5], [.55, .48], [-.42, .62], [-.68, .2]]).slice(0, 3).forEach(([u, v]) => {
@@ -217,8 +258,8 @@ function potatoSVG(o) {
     body += `<path d="M${f1(x - 2.6)} ${f1(y)}Q${f1(x)} ${f1(y - 2.4)} ${f1(x + 2.6)} ${f1(y)}" fill="none" stroke="${pal.spot}" stroke-width="1.8" stroke-linecap="round"/><circle cx="${f1(x + .3)}" cy="${f1(y + 1.3)}" r=".9" fill="${pal.spot}"/>`;
   });
   body += `<path d="M${f1(cx - rx * .62)} ${f1(cy - ry * .26)}Q${f1(cx - rx * .6)} ${f1(cy - ry * .66)} ${f1(cx - rx * .22)} ${f1(cy - ry * .84)}" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".55"/>`;
-  body += `<path d="${ringD}" fill="${INK}" fill-rule="evenodd"/>`;
-  body += `<path d="${smooth(bodyPts(b, .6))}" fill="none" stroke="${INK}" stroke-width="1.1" opacity=".45" transform="translate(1.6 -1.3) rotate(1.4 ${cx} ${cy})"/>`;
+  body += `<path class="br" d="${F.ring}" fill="${INK}" fill-rule="evenodd"/>`;
+  body += `<path class="bs" d="${F.sketch}" fill="none" stroke="${INK}" stroke-width="1.1" opacity=".45" transform="translate(1.6 -1.3) rotate(1.4 ${cx} ${cy})"/>`;
   const chy = ey + er * 1.85;
   body += `<ellipse cx="${f1(cx - rx * .6)}" cy="${f1(chy)}" rx="6.5" ry="4" fill="#ff8f9e" opacity=".55"/><ellipse cx="${f1(cx + rx * .6)}" cy="${f1(chy)}" rx="6.5" ry="4" fill="#ff8f9e" opacity=".55"/>`;
 
@@ -230,230 +271,50 @@ function potatoSVG(o) {
     teeth: `<path d="${D}" fill="#7a2a1e" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/><path d="M${f1(mx - s * .8)} ${f1(my + .8)}L${f1(mx + s * .8)} ${f1(my + .8)}L${f1(mx + s * .6)} ${f1(my + s * .38)}L${f1(mx - s * .6)} ${f1(my + s * .38)}Z" fill="#fff"/>`,
     smile: `<path d="${SM}" ${S} stroke-width="2.6"/>`,
     cat: `<path d="M${f1(mx - s)} ${f1(my)}q${f1(s / 2)} ${f1(s * .7)} ${f1(s)} 0q${f1(s / 2)} ${f1(s * .7)} ${f1(s)} 0" ${S} stroke-width="2.4"/>`,
-    o: `<ellipse cx="${f1(mx)}" cy="${f1(my + s * .45)}" rx="${f1(s * .36)}" ry="${f1(s * .48)}" fill="#7a2a1e" stroke="${INK}" stroke-width="2"/>`,
     blep: `<path d="M${f1(mx - 3.5)} ${f1(my + 2.5)}Q${f1(mx - 3.5)} ${f1(my + 10)} ${f1(mx + 1)} ${f1(my + 10)}Q${f1(mx + 5)} ${f1(my + 10)} ${f1(mx + 4.5)} ${f1(my + 2.5)}Z" fill="#ff8b9c" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/><path d="${SM}" ${S} stroke-width="2.6"/>`,
+    smirk: `<path d="M${f1(mx - s * .75)} ${f1(my + 1)}Q${f1(mx + s * .1)} ${f1(my + s * .85)} ${f1(mx + s * .9)} ${f1(my - 2.5)}" ${S} stroke-width="2.6"/>`,
   }[o.mouth];
 
-  /* спереди: шарф, бабочка, пластырь */
-  if (o.acc === 'scarf') {
-    const y = cy + ry * .56, xl = cx - rx * .92, xr = cx + rx * .92;
-    front += `<path d="M${f1(xl)} ${f1(y - 6)}Q${f1(cx)} ${f1(y + 5)} ${f1(xr)} ${f1(y - 6)}L${f1(xr - 1)} ${f1(y + 6)}Q${f1(cx)} ${f1(y + 17)} ${f1(xl + 1)} ${f1(y + 6)}Z" fill="${o.cup}" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/><path d="M${f1(cx + rx * .3)} ${f1(y + 8)}l5 22l10 -2.5l-3.5 -21Z" fill="${o.cup}" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/><path d="M${f1(cx - rx * .5)} ${f1(y - 1)}l-1.5 11M${f1(cx - rx * .12)} ${f1(y + 2)}l-1 11M${f1(cx + rx * .62)} ${f1(y - 1)}l1.5 10" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>`;
+  /* шея: цепь или бабочка */
+  if (o.neck === 'chain') {
+    const y1 = my + 14, yc = my + 33, xl = cx - rx * .45, xr = cx + rx * .45;
+    const d = `M${f1(xl)} ${f1(y1)}Q${f1(cx)} ${f1(yc)} ${f1(xr)} ${f1(y1)}`, py = (y1 + yc) / 2 + 6;
+    front += `<path d="${d}" fill="none" stroke="#a87412" stroke-width="6" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#ffd34d" stroke-width="3.6" stroke-linecap="round" stroke-dasharray=".1 5.2"/><circle cx="${f1(cx)}" cy="${f1(py)}" r="6" fill="#ffd34d" stroke="${INK}" stroke-width="2"/><path d="M${f1(cx - 2.5)} ${f1(py - 2)}l3 -1.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>`;
   }
-  if (o.acc === 'bowtie') {
+  if (o.neck === 'bowtie') {
     const y = cy + ry * .55;
-    front += `<g stroke="${INK}" stroke-width="2.2" stroke-linejoin="round" fill="${o.cup}"><path d="M${f1(cx)} ${f1(y)}L${f1(cx - 14)} ${f1(y - 8)}L${f1(cx - 13)} ${f1(y + 8)}Z"/><path d="M${f1(cx)} ${f1(y)}L${f1(cx + 14)} ${f1(y - 7)}L${f1(cx + 13)} ${f1(y + 9)}Z"/><rect x="${f1(cx - 3.5)}" y="${f1(y - 4.5)}" width="7" height="9" rx="2.5"/></g>`;
-  }
-  if (o.acc === 'plaster') {
-    const x = cx + rx * .32, y = cy - ry * .6;
-    front += `<g transform="rotate(-24 ${f1(x)} ${f1(y)})"><rect x="${f1(x - 12)}" y="${f1(y - 4.5)}" width="24" height="9" rx="4.5" fill="#f7d6ad" stroke="${INK}" stroke-width="1.8"/><rect x="${f1(x - 4)}" y="${f1(y - 3.4)}" width="8" height="6.8" fill="#e9b98b"/><circle cx="${f1(x - 8)}" cy="${f1(y)}" r=".9" fill="${INK}"/><circle cx="${f1(x + 8)}" cy="${f1(y)}" r=".9" fill="${INK}"/></g>`;
+    front += `<g stroke="${INK}" stroke-width="2.2" stroke-linejoin="round" fill="${o.hc2}"><path d="M${f1(cx)} ${f1(y)}L${f1(cx - 14)} ${f1(y - 8)}L${f1(cx - 13)} ${f1(y + 8)}Z"/><path d="M${f1(cx)} ${f1(y)}L${f1(cx + 14)} ${f1(y - 7)}L${f1(cx + 13)} ${f1(y + 9)}Z"/><rect x="${f1(cx - 3.5)}" y="${f1(y - 4.5)}" width="7" height="9" rx="2.5"/></g>`;
   }
 
-  /* глаза и очки */
-  if (o.acc === 'shades') {
-    const w = er * 2.5, h = er * 1.8;
-    over += `<g stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M${f1(ex1 - w / 2)} ${f1(ey - 2)}L${f1(minX + 3)} ${f1(ey - 6)}M${f1(ex2 + w / 2)} ${f1(ey - 2)}L${f1(maxX - 3)} ${f1(ey - 6)}" fill="none"/><rect x="${f1(ex1 - w / 2)}" y="${f1(ey - h / 2)}" width="${f1(w)}" height="${f1(h)}" rx="${f1(h * .42)}" fill="#1f2433"/><rect x="${f1(ex2 - w / 2)}" y="${f1(ey - h / 2)}" width="${f1(w)}" height="${f1(h)}" rx="${f1(h * .42)}" fill="#1f2433"/><path d="M${f1(ex1 + w / 2)} ${f1(ey - h * .15)}Q${f1(cx)} ${f1(ey - h * .45)} ${f1(ex2 - w / 2)} ${f1(ey - h * .15)}" fill="none"/></g><path d="M${f1(ex1 - w * .25)} ${f1(ey - h * .1)}l${f1(w * .22)} ${f1(-h * .25)}M${f1(ex2 - w * .25)} ${f1(ey - h * .1)}l${f1(w * .22)} ${f1(-h * .25)}" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".7"/>`;
-  } else {
-    const big = x => `<g class="eye"><path d="${wobCircle(x, ey, er, 1.08)}" fill="#fff" stroke="${INK}" stroke-width="2.2"/><g class="pupil"><circle cx="${f1(x)}" cy="${f1(ey + er * .1)}" r="${f1(er * .5)}" fill="${INK}"/><circle cx="${f1(x + er * .18)}" cy="${f1(ey - er * .1)}" r="${f1(er * .18)}" fill="#fff"/></g></g>`;
-    const happy = x => `<path d="M${f1(x - er)} ${f1(ey + er * .3)}Q${f1(x)} ${f1(ey - er * 1.05)} ${f1(x + er)} ${f1(ey + er * .3)}" ${S} stroke-width="3"/>`;
-    eyes = o.eyes === 'happy' ? happy(ex1) + happy(ex2) : o.eyes === 'wink' ? big(ex1) + happy(ex2) : big(ex1) + big(ex2);
+  /* руки: пачка денег или веер купюр */
+  if (o.hand === 'money') {
+    const x = maxX - 6, y = ny + 2;
+    front += `<g transform="rotate(-14 ${f1(x)} ${f1(y)})" stroke="${INK}" stroke-width="2" stroke-linejoin="round"><rect x="${f1(x - 14)}" y="${f1(y + 2)}" width="28" height="14" rx="2" fill="#5fae5a"/><rect x="${f1(x - 14)}" y="${f1(y - 2)}" width="28" height="14" rx="2" fill="#6cc068"/><rect x="${f1(x - 14)}" y="${f1(y - 6)}" width="28" height="14" rx="2" fill="#7fd27a"/><rect x="${f1(x - 3.5)}" y="${f1(y - 6)}" width="7" height="22" fill="#f4e3b5" stroke-width="1.6"/><circle cx="${f1(x - 8.5)}" cy="${f1(y + 1)}" r="2.6" fill="none" stroke="#3d7a3a" stroke-width="1.4"/><circle cx="${f1(x + 8.5)}" cy="${f1(y + 1)}" r="2.6" fill="none" stroke="#3d7a3a" stroke-width="1.4"/></g><ellipse cx="${f1(maxX + 1)}" cy="${f1(y + 10)}" rx="7" ry="8.5" fill="${pal.fill}" stroke="${INK}" stroke-width="2.4"/>`;
   }
-  if (o.acc === 'specs') {
-    over += `<g fill="rgba(255,255,255,.18)" stroke="${INK}" stroke-width="2.2"><path d="${wobCircle(ex1, ey, er * 1.42, 1)}"/><path d="${wobCircle(ex2, ey, er * 1.42, 1)}"/></g><path d="M${f1(ex1 + er * 1.42)} ${f1(ey - 1)}Q${f1(cx)} ${f1(ey - 5)} ${f1(ex2 - er * 1.42)} ${f1(ey - 1)}M${f1(ex1 - er * 1.42)} ${f1(ey - 1)}L${f1(minX + 3)} ${f1(ey - 4)}M${f1(ex2 + er * 1.42)} ${f1(ey - 1)}L${f1(maxX - 3)} ${f1(ey - 4)}" ${S} stroke-width="2.2"/>`;
+  if (o.hand === 'cash') {
+    const px = minX + 9, py = cy + ry * .1;
+    let bills = '';
+    [-150, -125, -100].forEach((ang, i) => {
+      bills += `<g transform="rotate(${ang} ${f1(px)} ${f1(py)})"><rect x="${f1(px)}" y="${f1(py - 6.5)}" width="27" height="13" rx="2" fill="${['#6cc068', '#7fd27a', '#8fe08a'][i]}"/><circle cx="${f1(px + 17)}" cy="${f1(py)}" r="3" fill="none" stroke="#3d7a3a" stroke-width="1.4"/></g>`;
+    });
+    front += `<g stroke="${INK}" stroke-width="2" stroke-linejoin="round">${bills}</g><ellipse cx="${f1(px - 2)}" cy="${f1(py + 2)}" rx="7" ry="8.5" fill="${pal.fill}" stroke="${INK}" stroke-width="2.4"/>`;
   }
-  return `<svg class="pz" viewBox="0 0 140 190" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">${back}${body}${front}${eyes}${over}</svg>`;
-}
-function makeSpecs(n) {
-  let accs = [], mouths = [];
-  while (accs.length < n) accs = accs.concat(shuffle(ACCS.slice()));
-  while (mouths.length < n) mouths = mouths.concat(shuffle(MOUTHS.slice()));
-  return Array.from({ length: n }, (_, i) => ({
-    pal: PALS[Math.random() * PALS.length | 0],
-    rx: rnd(38, 45), ry: rnd(50, 57),
-    acc: accs[i], mouth: mouths[i],
-    eyes: Math.random() < .62 ? 'big' : Math.random() < .6 ? 'happy' : 'wink',
-    cup: CUPS[Math.random() * CUPS.length | 0],
-  }));
-}
 
-/* ===== раскладка ===== */
-const EV = window.PointerEvent ? 'pointerdown' : 'touchstart';
-const ANIMS = ['float', 'sway', 'bounce'];
-let builtW = 0, builtH = 0, POTS = [], lookT = 0;
-function layoutPots() {
-  const box = $('#pots'), W = box.offsetWidth, H = box.offsetHeight;
-  if (!W || !H) return;
-  builtW = W; builtH = H;
-  box.innerHTML = ''; POTS = [];
-  const cols = W < 520 ? 3 : W < 900 ? 4 : 5, cw = W / cols;
-  const rows = Math.max(3, Math.min(6, Math.round(H / (cw * 1.15)))), ch = H / rows;
-  const specs = makeSpecs(cols * rows);
-  for (let r = 0, i = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++, i++) {
-      const depth = rows > 1 ? r / (rows - 1) : 1;
-      const k = (0.84 + 0.16 * depth) * rnd(0.92, 1.04);
-      const sw = cw * k, sh = ch * k;
-      const px = (c + 0.5) * cw + rnd(-0.1, 0.1) * cw, py = (r + 0.5) * ch + rnd(-0.06, 0.06) * ch;
-      const slot = document.createElement('div'), pot = document.createElement('div'), inn = document.createElement('div');
-      slot.className = 'slot'; pot.className = 'pot'; inn.className = 'pot-in';
-      slot.style.cssText = `left:${f1(Math.max(0, Math.min(W - sw, px - sw / 2)))}px;top:${f1(Math.max(0, Math.min(H - sh, py - sh / 2)))}px;width:${f1(sw)}px;height:${f1(sh)}px;z-index:${r + 1};transform:rotate(${f1(rnd(-5, 5))}deg)`;
-      const dur = rnd(2.4, 3.8), del = -rnd(0, dur);
-      slot.style.setProperty('--t', dur.toFixed(2) + 's');
-      slot.style.setProperty('--d', del.toFixed(2) + 's');
-      pot.style.animation = `${ANIMS[Math.random() * ANIMS.length | 0]} ${dur.toFixed(2)}s ease-in-out ${del.toFixed(2)}s infinite`;
-      inn.innerHTML = potatoSVG(specs[i]);
-      const svg = inn.firstElementChild;
-      svg.style.width = f1(sw) + 'px'; svg.style.height = f1(sh) + 'px';
-      pot.appendChild(inn); slot.appendChild(pot); box.appendChild(slot);
-      POTS.push({ slot, svg, pupils: Array.from(svg.querySelectorAll('.pupil')) });
-      pot.addEventListener(EV, e => { e.preventDefault(); tap(inn, slot); }, { passive: false });
-    }
+  /* головные уборы */
+  const hc = o.hc;
+  if (o.head === 'tophat') {
+    hat = `<g transform="rotate(${f1(rnd(-12, -4))} ${f1(cx)} ${f1(top + 10)})" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"><ellipse cx="${f1(cx)}" cy="${f1(top + 10)}" rx="30" ry="6" fill="#2b2b35"/><path d="M${f1(cx - 18)} ${f1(top + 9)}L${f1(cx - 16)} ${f1(top - 26)}Q${f1(cx)} ${f1(top - 30)} ${f1(cx + 16)} ${f1(top - 26)}L${f1(cx + 18)} ${f1(top + 9)}Z" fill="#2b2b35"/><path d="M${f1(cx - 17.6)} ${f1(top + 1)}L${f1(cx + 17.6)} ${f1(top + 1)}L${f1(cx + 17.9)} ${f1(top + 7)}L${f1(cx - 17.9)} ${f1(top + 7)}Z" fill="${hc}" stroke-width="1.8"/><path d="M${f1(cx - 30)} ${f1(top + 10)}A30 6 0 0 0 ${f1(cx + 30)} ${f1(top + 10)}Z" fill="#2b2b35"/><path d="M${f1(cx - 11)} ${f1(top - 20)}L${f1(cx - 12)} ${f1(top - 4)}" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".35"/></g>`;
   }
-  idleLook();
-}
-function setLook(p, dx, dy) { p.pupils.forEach(el => { el.style.transform = `translate(${f1(dx)}px,${f1(dy)}px)`; }); }
-function idleLook() { POTS.forEach(p => { const a = rnd(0, 6.28), m = rnd(0, 2); setLook(p, Math.cos(a) * m, Math.sin(a) * m); }); }
-function lookAt(src) {
-  const r0 = src.getBoundingClientRect(), tx = r0.left + r0.width / 2, ty = r0.top + r0.height * .45;
-  POTS.forEach(p => {
-    if (!p.pupils.length) return;
-    if (p.slot === src) return setLook(p, 0, 2.6);
-    const r = p.slot.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height * .45;
-    const L = Math.hypot(tx - x, ty - y) || 1;
-    setLook(p, (tx - x) / L * 3, (ty - y) / L * 3);
-  });
-  clearTimeout(lookT);
-  lookT = setTimeout(idleLook, 2600);
-}
-
-/* ===== мемы из репозитория ===== */
-async function listFolder(folder) {
-  const host = location.hostname;
-  if (!/\.github\.io$/i.test(host)) return null;
-  const owner = host.split('.')[0];
-  const seg = location.pathname.split('/').filter(Boolean)[0];
-  const repo = seg && seg.indexOf('.') < 0 ? seg : host;
-  try {
-    const r = await Promise.race([fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${folder}`), later(6000, null)]);
-    if (!r || !r.ok) return null;
-    const list = await r.json();
-    if (!Array.isArray(list)) return null;
-    return list
-      .filter(f => f.type === 'file' && IMG_RE.test(f.name))
-      .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
-      .map(f => [(folder ? folder + '/' : '') + encodeURIComponent(f.name), f.download_url]);
-  } catch (e) { return null; }
-}
-function loadImg(srcs) {
-  return new Promise(res => {
-    const list = srcs.filter(Boolean);
-    let i = 0, done = false;
-    const end = v => { if (!done) { done = true; res(v); } };
-    setTimeout(() => end(null), 12000);
-    const next = () => {
-      if (i >= list.length) return end(null);
-      const src = list[i++], im = new Image();
-      im.onload = () => (im.naturalWidth ? end({ src, w: im.naturalWidth, h: im.naturalHeight }) : next());
-      im.onerror = next;
-      im.src = src;
-    };
-    next();
-  });
-}
-
-/* ===== тапы ===== */
-let taps = 0, state = 'play', bag = [], lastMeme = null;
-const memes = [], live = [];
-function tap(inn, slot) {
-  if (state !== 'play') return;
-  inn.style.setProperty('--tilt', ((Math.random() < .5 ? -1 : 1) * rnd(5, 10)).toFixed(1) + 'deg');
-  inn.classList.remove('hop'); void inn.offsetWidth; inn.classList.add('hop');
-  lookAt(slot);
-  showMeme();
-  if (++taps >= CONFIG.taps) finish();
-}
-function nextMeme() {
-  if (!memes.length) return null;
-  if (!bag.length) {
-    bag = shuffle(memes.slice());
-    if (bag.length > 1 && bag[bag.length - 1] === lastMeme) bag.unshift(bag.pop());
+  if (o.head === 'cap') {
+    hat = `<g transform="translate(${f1(cx)} ${f1(top)}) scale(${Math.random() < .5 ? 1 : -1} 1)" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M12 16Q40 12 47 19Q31 25 9 21Z" fill="${hc}"/><path d="M-27 17C-27 -8 27 -8 27 17Z" fill="${hc}"/><path d="M0 -1V16M-13 2Q-10 9 -12 16M13 2Q10 9 12 16" fill="none" stroke-width="1.4" opacity=".45"/><circle cx="0" cy="-2.5" r="2.8" fill="${hc}"/></g>`;
   }
-  return (lastMeme = bag.pop());
-}
-function showMeme() {
-  const m = nextMeme(); if (!m) return;
-  while (live.length >= 4) live.shift().remove();
-  const W = innerWidth, H = innerHeight;
-  const k = Math.min(1, Math.min(W * .62, 340) / m.w, (H * .36) / m.h);
-  const w = Math.round(m.w * k), h = Math.round(m.h * k), bw = w + 10, bh = h + 10;
-  const el = document.createElement('div'), im = new Image();
-  el.className = 'meme';
-  im.src = m.src; im.alt = ''; im.draggable = false;
-  im.style.width = w + 'px'; im.style.height = h + 'px';
-  el.appendChild(im);
-  const x0 = bw / 2 + 10, x1 = Math.max(x0, W - bw / 2 - 10);
-  const y0 = bh / 2 + 50, y1 = Math.max(y0, H * .74 - bh / 2);
-  el.style.left = rnd(x0, x1) + 'px';
-  el.style.top = rnd(y0, y1) + 'px';
-  el.style.setProperty('--r', rnd(-12, 12).toFixed(1) + 'deg');
-  $('#memes').appendChild(el); live.push(el);
-  setTimeout(() => el.classList.add('bye'), 1500);
-  setTimeout(() => { el.remove(); const i = live.indexOf(el); if (i > -1) live.splice(i, 1); }, 1900);
-}
+  if (o.head === 'beanie') {
+    hat = `<g transform="translate(${f1(cx)} ${f1(top)})" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="0" cy="-8" r="7.5" fill="#fff"/><path d="M-29 21C-30 -12 30 -12 29 21Z" fill="${hc}"/><path d="M-14 -1Q-13 8 -15 14M0 -4V13M14 -1Q13 8 15 14" fill="none" stroke-width="1.4" opacity=".35"/><rect x="-33" y="12" width="66" height="12" rx="6" fill="${o.hc2}"/><path d="M-24 15V21M-16 15V21M-8 15V21M0 15V21M8 15V21M16 15V21M24 15V21" stroke-width="1.3" opacity=".35"/></g>`;
+  }
+  if (o.head === 'bucket') {
+    hat = `<g transform="translate(${f1(cx)} ${f1(top)}) rotate(${f1(rnd(-8, 8))})" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"><path d="M-19 8Q-18 -14 0 -15Q18 -14 19 8Z" fill="${hc}"/><path d="M-19 6L19 6L34 19Q0 27 -34 19Z" fill="${hc}"/><path d="M-18 5Q0 9 18 5" fill="none" stroke-width="1.6" opacity=".5"/><g fill="#fff" stroke="none"><circle cx="-7" cy="-5" r="1.8"/><circle cx="6" cy="-9" r="1.6"/><circle cx="10" cy="0" r="1.8"/><circle cx="-22" cy="16" r="1.6"/><circle cx="21" cy="15" r="1.7"/><circle cx="0" cy="17" r="1.6"/></g></g>`;
+  }
 
-/* ===== письмо ===== */
-function finish() {
-  state = 'end';
-  setTimeout(() => {
-    $('#stage').classList.add('out');
-    live.forEach(el => el.classList.add('bye'));
-    const env = $('#env');
-    env.hidden = false; void env.offsetWidth; env.classList.add('in');
-    setTimeout(() => env.classList.add('open'), 1000);
-    setTimeout(() => env.classList.add('peek'), 1650);
-    setTimeout(openLetter, 2700);
-  }, 900);
-}
-function openLetter() {
-  const env = $('#env'), L = $('#letter'), paper = $('#paper');
-  paper.innerHTML = '';
-  LETTER.split('\n').map(s => s.trim()).filter(Boolean).forEach((t, i) => {
-    const p = document.createElement('p');
-    p.textContent = t;
-    p.style.animationDelay = (0.5 + i * 0.3).toFixed(2) + 's';
-    paper.appendChild(p);
-  });
-  env.classList.add('gone');
-  L.hidden = false; L.scrollTop = 0; void L.offsetWidth; L.classList.add('on');
-  setTimeout(() => { env.hidden = true; }, 700);
-}
-
-/* ===== моргание ===== */
-setInterval(() => {
-  if (document.hidden || state !== 'play') return;
-  const c = POTS.filter(p => p.pupils.length);
-  if (!c.length) return;
-  const p = c[Math.random() * c.length | 0];
-  p.svg.classList.add('bl');
-  setTimeout(() => p.svg.classList.remove('bl'), 160);
-}, 300);
-
-/* ===== старт ===== */
-layoutPots();
-requestAnimationFrame(() => requestAnimationFrame(() => $('#pots').classList.add('ready')));
-(async () => {
-  const list = await listFolder('');
-  const memeC = list && list.length ? list : CONFIG.memes.map(s => [s]);
-  memeC.forEach(c => loadImg(c).then(m => { if (m) memes.push(m); }));
-})();
-
-let rsT;
-addEventListener('resize', () => {
-  clearTimeout(rsT);
-  rsT = setTimeout(() => {
-    const box = $('#pots');
-    if (state === 'play' && (Math.abs(box.offsetWidth - builtW) > 30 || Math.abs(box.offsetHeight - builtH) > 120)) layoutPots();
-  }, 250);
-});
-</script>
-</body>
-</html>
+  /* глаза */
+  if (!hidesEyes) {
+    const big = x => `<g class="eye">
